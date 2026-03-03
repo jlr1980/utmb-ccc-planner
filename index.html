@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UTMB CCC Planner — Kathleen's Road to Chamonix 2027</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #1a2744;
+  --navy-light: #243352;
+  --blue: #3b7dd8;
+  --blue-muted: #5a8fc7;
+  --sky: #d4e5f7;
+  --sky-light: #eaf2fb;
+  --gold: #e8a838;
+  --gold-light: #fdf3dc;
+  --orange: #d96a3b;
+  --green: #2d8a4e;
+  --green-light: #d4edda;
+  --green-bg: #edf7f0;
+  --red: #c0392b;
+  --red-light: #fde8e8;
+  --white: #ffffff;
+  --gray-50: #f8f9fa;
+  --gray-100: #f0f1f3;
+  --gray-200: #e2e4e8;
+  --gray-300: #c8ccd2;
+  --gray-500: #6b7280;
+  --gray-700: #374151;
+  --gray-900: #111827;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.12);
+  --radius: 10px;
+  --radius-lg: 16px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--gray-50);
+  color: var(--gray-900);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== HERO ===== */
+.hero {
+  background: linear-gradient(135deg, var(--navy) 0%, #2c4a7c 50%, #3b6b9e 100%);
+  padding: 3rem 2rem 2.5rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%; width: 200%; height: 200%;
+  background: radial-gradient(circle at 30% 70%, rgba(232,168,56,0.08) 0%, transparent 50%),
+              radial-gradient(circle at 70% 30%, rgba(59,125,216,0.1) 0%, transparent 50%);
+  animation: drift 20s ease-in-out infinite;
+}
+@keyframes drift {
+  0%, 100% { transform: translate(0,0) rotate(0deg); }
+  50% { transform: translate(-2%,1%) rotate(1deg); }
+}
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 800;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  color: var(--white);
+  position: relative;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.4rem;
+}
+.hero h1 span { color: var(--gold); }
+.hero .subtitle {
+  color: rgba(255,255,255,0.7);
+  font-size: 0.95rem;
+  font-weight: 400;
+  position: relative;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ===== STATS BAR ===== */
+.stats-bar {
+  display: flex;
+  justify-content: center;
+  gap: 1px;
+  background: var(--navy);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-lg);
+}
+.stat-card {
+  flex: 1;
+  max-width: 220px;
+  padding: 0.9rem 1rem;
+  text-align: center;
+  background: var(--navy-light);
+  transition: background 0.3s;
+}
+.stat-card:hover { background: #2d4060; }
+.stat-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--gold);
+  line-height: 1.1;
+}
+.stat-value.green { color: #5ddb82; }
+.stat-value.blue { color: #7db8f0; }
+.stat-value.orange { color: var(--orange); }
+.stat-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.55);
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+/* ===== MAIN CONTENT ===== */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+}
+
+/* ===== SECTION HEADERS ===== */
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin: 2rem 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--gray-200);
+}
+.section-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--navy);
+}
+.section-header .count {
+  font-size: 0.8rem;
+  color: var(--gray-500);
+  font-weight: 500;
+}
+
+/* ===== FILTERS ===== */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.filter-btn {
+  padding: 0.4rem 0.9rem;
+  border: 1.5px solid var(--gray-200);
+  border-radius: 99px;
+  background: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--gray-700);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.filter-btn:hover { border-color: var(--blue-muted); color: var(--blue); }
+.filter-btn.active {
+  background: var(--navy);
+  color: var(--white);
+  border-color: var(--navy);
+}
+
+/* ===== RACE TABLE ===== */
+.race-table-wrap {
+  overflow-x: auto;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  background: var(--white);
+}
+.race-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.race-table thead th {
+  background: var(--navy);
+  color: var(--white);
+  font-weight: 600;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.75rem 0.6rem;
+  text-align: left;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+}
+.race-table thead th:first-child { border-radius: var(--radius) 0 0 0; }
+.race-table thead th:last-child { border-radius: 0 var(--radius) 0 0; text-align: center; }
+.race-table tbody tr {
+  border-bottom: 1px solid var(--gray-100);
+  transition: background 0.15s;
+  cursor: pointer;
+}
+.race-table tbody tr:hover { background: var(--sky-light); }
+.race-table tbody tr.selected { background: var(--green-bg); }
+.race-table tbody tr.major { background: var(--gold-light); }
+.race-table tbody tr.major.selected { background: #c8e6c9; }
+.race-table td {
+  padding: 0.6rem;
+  vertical-align: middle;
+}
+.race-table td:last-child { text-align: center; }
+
+.race-name { font-weight: 600; color: var(--navy); }
+.race-name .major-badge {
+  display: inline-block;
+  background: var(--gold);
+  color: var(--navy);
+  font-size: 0.55rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.15em 0.5em;
+  border-radius: 3px;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+}
+.race-name .local-badge {
+  display: inline-block;
+  background: var(--green);
+  color: var(--white);
+  font-size: 0.55rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.15em 0.5em;
+  border-radius: 3px;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+}
+.race-meta { color: var(--gray-500); font-size: 0.78rem; }
+.stones-pill {
+  display: inline-block;
+  background: var(--navy);
+  color: var(--gold);
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 0.2em 0.6em;
+  border-radius: 99px;
+  min-width: 1.8em;
+  text-align: center;
+}
+.stones-pill.major-stones { background: var(--gold); color: var(--navy); }
+.index-yes {
+  color: var(--green);
+  font-weight: 600;
+  font-size: 0.78rem;
+}
+.index-no {
+  color: var(--gray-500);
+  font-size: 0.78rem;
+}
+
+/* Checkbox */
+.check-col {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.race-check {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  border: 2px solid var(--gray-300);
+  background: var(--white);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.race-check:hover { border-color: var(--green); }
+.race-check.checked {
+  background: var(--green);
+  border-color: var(--green);
+}
+.race-check.checked::after {
+  content: '';
+  width: 6px;
+  height: 11px;
+  border: solid var(--white);
+  border-width: 0 2.5px 2.5px 0;
+  transform: rotate(45deg) translate(-1px, -1px);
+}
+
+/* ===== ODDS PANEL ===== */
+.odds-panel {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+}
+.odds-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+.odds-card {
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  text-align: center;
+}
+.odds-card h3 {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--gray-500);
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+}
+.odds-big {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.8rem;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--navy);
+}
+.odds-big.gold { color: var(--gold); }
+.odds-big.green { color: var(--green); }
+.odds-big.orange { color: var(--orange); }
+.odds-sub {
+  font-size: 0.8rem;
+  color: var(--gray-500);
+  margin-top: 0.2rem;
+}
+.odds-meter {
+  margin-top: 0.6rem;
+  height: 8px;
+  background: var(--gray-100);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.odds-meter-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.6s ease, background 0.3s;
+  background: var(--green);
+}
+
+/* ===== SCENARIO TABLE ===== */
+.scenario-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  margin-top: 1rem;
+}
+.scenario-table th {
+  background: var(--gray-100);
+  font-weight: 600;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.6rem;
+  text-align: center;
+  color: var(--gray-700);
+}
+.scenario-table td {
+  padding: 0.5rem 0.6rem;
+  text-align: center;
+  border-bottom: 1px solid var(--gray-100);
+}
+.scenario-table tr.highlight {
+  background: var(--green-light);
+  font-weight: 600;
+}
+.scenario-table tr.current {
+  background: var(--gold-light);
+  font-weight: 700;
+}
+
+/* ===== STRATEGY CARDS ===== */
+.strategy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.strategy-card {
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  background: var(--white);
+  border: 1.5px solid var(--gray-200);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.strategy-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.strategy-card-head {
+  padding: 0.8rem 1rem;
+  color: var(--white);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+.strategy-card-body {
+  padding: 1rem;
+}
+.strategy-race {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--gray-100);
+  font-size: 0.82rem;
+}
+.strategy-race:last-child { border-bottom: none; }
+.strategy-race .sr-name { font-weight: 500; }
+.strategy-race .sr-stones { font-weight: 700; color: var(--navy); }
+.strategy-summary {
+  margin-top: 0.6rem;
+  padding-top: 0.6rem;
+  border-top: 2px solid var(--gray-200);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--navy);
+}
+
+/* ===== INFO SECTION ===== */
+.info-box {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 1.5rem;
+  margin-top: 1rem;
+}
+.info-box h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  color: var(--navy);
+  margin-bottom: 0.6rem;
+}
+.info-box p, .info-box li {
+  font-size: 0.88rem;
+  color: var(--gray-700);
+  margin-bottom: 0.4rem;
+}
+.info-box ul {
+  list-style: none;
+  padding: 0;
+}
+.info-box li::before {
+  content: '\2022';
+  color: var(--gold);
+  font-weight: 700;
+  margin-right: 0.5rem;
+}
+.stone-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  margin: 0.5rem 0;
+}
+.stone-table th, .stone-table td {
+  padding: 0.45rem 0.8rem;
+  border: 1px solid var(--gray-200);
+  text-align: center;
+}
+.stone-table th {
+  background: var(--navy);
+  color: var(--white);
+  font-weight: 600;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ===== FOOTER ===== */
+.footer {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--gray-500);
+  font-size: 0.75rem;
+}
+.footer a { color: var(--blue-muted); }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .stats-bar { flex-wrap: wrap; }
+  .stat-card { min-width: 50%; }
+  .race-table { font-size: 0.78rem; }
+  .container { padding: 1rem 0.5rem; }
+  .odds-big { font-size: 2rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>Kathleen's Road to <span>Chamonix</span></h1>
+  <p class="subtitle">CCC (100K) at UTMB Mont-Blanc &mdash; August 29, 2027</p>
+</div>
+
+<div class="stats-bar" id="statsBar">
+  <div class="stat-card">
+    <div class="stat-value green" id="statStones">0</div>
+    <div class="stat-label">Running Stones</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value blue" id="statRaces">0</div>
+    <div class="stat-label">Races Selected</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value" id="statOdds">&mdash;</div>
+    <div class="stat-label">Selection Probability</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value orange" id="statIndex">No</div>
+    <div class="stat-label">Valid CCC Index</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- RACE SELECTOR -->
+  <div class="section-header">
+    <h2>Select Your Races</h2>
+    <span class="count" id="raceCount"></span>
+  </div>
+
+  <div class="filters" id="filters"></div>
+
+  <div class="race-table-wrap">
+    <table class="race-table">
+      <thead>
+        <tr>
+          <th>Event</th>
+          <th>Dates</th>
+          <th>Location</th>
+          <th>Best CCC Category</th>
+          <th>Stones</th>
+          <th>CCC Index?</th>
+          <th>Mi from Logan</th>
+          <th style="text-align:center">Select</th>
+        </tr>
+      </thead>
+      <tbody id="raceBody"></tbody>
+    </table>
+  </div>
+
+  <!-- ODDS CALCULATOR -->
+  <div class="section-header" style="margin-top:2.5rem">
+    <h2>Your Lottery Odds</h2>
+  </div>
+
+  <div class="odds-panel">
+    <div class="odds-grid">
+      <div class="odds-card">
+        <h3>Running Stones</h3>
+        <div class="odds-big green" id="oddsStones">0</div>
+        <div class="odds-sub">Target: 6-8 for competitive odds</div>
+        <div class="odds-meter"><div class="odds-meter-fill" id="stoneMeter" style="width:0%"></div></div>
+      </div>
+      <div class="odds-card">
+        <h3>Selection Probability</h3>
+        <div class="odds-big" id="oddsProb">&mdash;</div>
+        <div class="odds-sub" id="oddsOne">&nbsp;</div>
+        <div class="odds-meter"><div class="odds-meter-fill" id="probMeter" style="width:0%"></div></div>
+      </div>
+      <div class="odds-card">
+        <h3>Assessment</h3>
+        <div class="odds-big" id="oddsAssess" style="font-size:1.4rem;margin-top:0.5rem">&mdash;</div>
+        <div class="odds-sub" id="oddsAdvice">&nbsp;</div>
+      </div>
+    </div>
+
+    <div class="section-header" style="margin-top:1.5rem;border-bottom:none">
+      <h2 style="font-size:1rem">Odds by Stone Count</h2>
+    </div>
+    <table class="scenario-table" id="scenarioTable">
+      <thead>
+        <tr>
+          <th>Stones</th>
+          <th>Probability</th>
+          <th>Approx. Odds</th>
+          <th>Assessment</th>
+          <th>How to Get There</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- STRATEGY GUIDE -->
+  <div class="section-header" style="margin-top:2.5rem">
+    <h2>Recommended Strategies</h2>
+  </div>
+  <div class="strategy-grid" id="strategyGrid"></div>
+
+  <!-- HOW IT WORKS -->
+  <div class="section-header" style="margin-top:2.5rem">
+    <h2>How UTMB Qualification Works</h2>
+  </div>
+
+  <div class="info-box">
+    <h3>Two Requirements for the CCC Lottery</h3>
+    <p><strong>1. Running Stones</strong> (lottery tickets) &mdash; earned by finishing UTMB World Series races:</p>
+    <table class="stone-table">
+      <tr><th>Category</th><th>Event Stones</th><th>Major Stones (2x)</th></tr>
+      <tr><td>20K</td><td>1</td><td>2</td></tr>
+      <tr><td>50K</td><td>2</td><td>4</td></tr>
+      <tr><td>100K</td><td>3</td><td>6</td></tr>
+      <tr><td>100M</td><td>4</td><td>8</td></tr>
+    </table>
+    <ul>
+      <li>Stones never expire, but go inactive if no new stone earned in 24 months</li>
+      <li>When selected in lottery, all stones reset to zero</li>
+      <li>More stones = more entries = better odds</li>
+    </ul>
+    <p style="margin-top:0.8rem"><strong>2. Valid UTMB Index</strong> &mdash; for CCC, need a finish in the 50K, 100K, or 100M category within 24 months. Over 5,500 races worldwide qualify.</p>
+  </div>
+
+  <div class="info-box" style="margin-top:1rem">
+    <h3>Key Dates for CCC 2027</h3>
+    <ul>
+      <li><strong>2026:</strong> Race UTMB World Series events to collect stones and earn your Index</li>
+      <li><strong>Dec 2026:</strong> Pre-register for CCC 2027 lottery (all stones must be earned by then)</li>
+      <li><strong>Mid-Jan 2027:</strong> Lottery results announced</li>
+      <li><strong>Aug 29, 2027:</strong> CCC race day in Chamonix, France</li>
+    </ul>
+  </div>
+
+  <div class="info-box" style="margin-top:1rem">
+    <h3>2025 Lottery Stats (CCC)</h3>
+    <ul>
+      <li>~6,000 applicants for ~1,200 lottery spots</li>
+      <li>Demand ~5x capacity (growing ~20-30% per year)</li>
+      <li>Average applicant: 4.4 stones</li>
+      <li>Average selected runner: 5.7 stones</li>
+      <li>Recommended target: 6-8 stones</li>
+    </ul>
+  </div>
+
+</div>
+
+<div class="footer">
+  <p>Built for Kathleen Reece. Data based on UTMB World Series 2026 calendar as of March 2026.</p>
+  <p style="margin-top:0.3rem">Sources: <a href="https://utmb.world/sports-system" target="_blank">UTMB Sports System</a> &bull; <a href="https://help.utmb.world/running-stones" target="_blank">Running Stones FAQ</a> &bull; <a href="https://utmb.world/utmb-world-series-events" target="_blank">Events Calendar</a></p>
+</div>
+
+<script>
+// ===== RACE DATA =====
+const races = [
+  // NORTH AMERICA
+  {name:"Desert RATS",country:"USA",city:"Fruita, CO",dates:"Apr 9-12",continent:"North America",type:"Event",dists:["50K","100K","100M"],lat:37.86,lon:-108.73,notes:""},
+  {name:"Puerto Vallarta",country:"Mexico",city:"Puerto Vallarta",dates:"Apr 16-18",continent:"North America",type:"Event",dists:["20K","50K"],lat:20.65,lon:-105.23,notes:"Beach & jungle trails"},
+  {name:"Canyons Endurance Runs",country:"USA",city:"Auburn, CA",dates:"Apr 23-25",continent:"North America",type:"Event",dists:["20K","50K","100K","100M"],lat:38.90,lon:-121.08,notes:"Also Western States qualifier"},
+  {name:"Rothrock",country:"USA",city:"State College, PA",dates:"May 15-17",continent:"North America",type:"Event",dists:["20K","50K"],lat:40.79,lon:-77.86,notes:"New for 2026"},
+  {name:"Western States Endurance Run",country:"USA",city:"Auburn, CA",dates:"Jun 27-28",continent:"North America",type:"Event",dists:["100M"],lat:38.90,lon:-121.08,notes:"Own lottery required"},
+  {name:"Speedgoat Mountain Races",country:"USA",city:"Snowbird, UT",dates:"Jul 23-25",continent:"North America",type:"Event",dists:["20K","50K"],lat:40.58,lon:-111.66,notes:"~45 min from Logan!"},
+  {name:"Pacific Trails California",country:"USA",city:"California",dates:"Aug 14-16",continent:"North America",type:"Event",dists:["50K","100K"],lat:37.50,lon:-122.00,notes:"New for 2026"},
+  {name:"Borealys Mont-Tremblant",country:"Canada",city:"Mont-Tremblant, QC",dates:"Aug 21-23",continent:"North America",type:"Event",dists:["20K","50K","100K"],lat:46.21,lon:-74.58,notes:"Laurentian Mountains"},
+  {name:"Snowbasin",country:"USA",city:"Ogden, UT",dates:"Sep 10-12",continent:"North America",type:"Event",dists:["20K","50K"],lat:41.22,lon:-111.86,notes:"NEW! ~1 hr from Logan!"},
+  {name:"Grindstone",country:"USA",city:"Swoope, VA",dates:"Sep 17-20",continent:"North America",type:"Event",dists:["50K","100K","100M"],lat:38.07,lon:-79.27,notes:"Appalachian Mountains"},
+  {name:"Ultra Trail Whistler",country:"Canada",city:"Whistler, BC",dates:"Oct 1-3",continent:"North America",type:"Event",dists:["20K","50K","100K"],lat:50.12,lon:-122.95,notes:"Coast Mountains"},
+  {name:"Kodiak Ultra Marathons",country:"USA",city:"Big Bear Lake, CA",dates:"Oct 8-11",continent:"North America",type:"Major",dists:["20K","50K","100K","100M"],lat:34.24,lon:-116.91,notes:"AMERICAS MAJOR \u2014 double stones!"},
+  {name:"Chihuahua",country:"Mexico",city:"Chihuahua",dates:"Nov 13-15",continent:"North America",type:"Event",dists:["20K","50K"],lat:28.63,lon:-106.09,notes:"Copper Canyon region"},
+
+  // SOUTH AMERICA
+  {name:"Quito Trail",country:"Ecuador",city:"Quito",dates:"Mar 18-22",continent:"South America",type:"Event",dists:["20K","50K","100K"],lat:-0.18,lon:-78.47,notes:"High altitude ~2,800m"},
+  {name:"Torrencial Chile",country:"Chile",city:"Central Chile",dates:"Jun 26-28",continent:"South America",type:"Event",dists:["20K","50K"],lat:-33.45,lon:-70.66,notes:"Winter season"},
+  {name:"Valhalla Argentina",country:"Argentina",city:"San Martin de los Andes",dates:"Jul 31-Aug 2",continent:"South America",type:"Event",dists:["20K","50K","100K","100M"],lat:-40.15,lon:-71.35,notes:"Patagonian Andes"},
+  {name:"EcoTrail Monteverde",country:"Costa Rica",city:"Monteverde",dates:"Sep 17-20",continent:"South America",type:"Event",dists:["20K","50K"],lat:10.31,lon:-84.82,notes:"Cloud forest"},
+  {name:"Patagonia Bariloche",country:"Argentina",city:"Bariloche",dates:"Nov 18-22",continent:"South America",type:"Event",dists:["20K","50K","100K"],lat:-41.13,lon:-71.31,notes:"Lake district"},
+
+  // EUROPE
+  {name:"Arc of Attrition",country:"UK",city:"Cornwall",dates:"Jan 22-25",continent:"Europe",type:"Event",dists:["50K","100M"],lat:50.12,lon:-5.54,notes:"Coastal winter ultra"},
+  {name:"Chianti Ultra Trail",country:"Italy",city:"Tuscany",dates:"Mar 19-22",continent:"Europe",type:"Event",dists:["20K","50K","100K"],lat:43.48,lon:11.25,notes:"Tuscan wine country"},
+  {name:"Tenerife Bluetrail",country:"Spain",city:"Tenerife",dates:"Mar 19-21",continent:"Europe",type:"Event",dists:["20K","50K","100K","100M"],lat:28.27,lon:-16.59,notes:"Volcanic island"},
+  {name:"Mallorca by UTMB",country:"Spain",city:"Mallorca",dates:"Apr 9-12",continent:"Europe",type:"Event",dists:["20K","50K","100K"],lat:39.69,lon:2.94,notes:"Mediterranean island"},
+  {name:"Grand Raid Ventoux",country:"France",city:"Mont Ventoux",dates:"Apr 24-26",continent:"Europe",type:"Event",dists:["20K","50K","100K"],lat:44.17,lon:5.28,notes:"Iconic mountain"},
+  {name:"Istria 100",country:"Croatia",city:"Istria",dates:"May 1-3",continent:"Europe",type:"Event",dists:["20K","50K","100K","100M"],lat:45.24,lon:13.77,notes:"Adriatic coast"},
+  {name:"Eiger Ultra Trail",country:"Switzerland",city:"Grindelwald",dates:"May 14-17",continent:"Europe",type:"Event",dists:["20K","50K","100K","100M"],lat:46.62,lon:8.04,notes:"Bernese Alps"},
+  {name:"Ultra-Trail Snowdonia",country:"UK",city:"Snowdonia",dates:"May 15-17",continent:"Europe",type:"Event",dists:["20K","50K","100K"],lat:53.07,lon:-3.99,notes:"Welsh mountains"},
+  {name:"Mozart 100",country:"Austria",city:"Salzburg",dates:"May 23",continent:"Europe",type:"Event",dists:["50K","100K"],lat:47.81,lon:13.04,notes:"Alps around Salzburg"},
+  {name:"Oh Meu Deus",country:"Portugal",city:"Portugal",dates:"Jun 11-14",continent:"Europe",type:"Event",dists:["20K","50K","100K"],lat:38.71,lon:-9.14,notes:"New Portuguese event"},
+  {name:"Gauja Trail",country:"Latvia",city:"Gauja NP",dates:"Jun 12-14",continent:"Europe",type:"Event",dists:["20K","50K"],lat:57.18,lon:25.08,notes:"Latvian national park"},
+  {name:"Wildstrubel",country:"Switzerland",city:"Crans-Montana",dates:"Jun 18-20",continent:"Europe",type:"Event",dists:["20K","50K","100K"],lat:46.31,lon:7.48,notes:"Swiss Alps"},
+  {name:"Lavaredo Ultra Trail",country:"Italy",city:"Cortina d'Ampezzo",dates:"Jun 24-28",continent:"Europe",type:"Event",dists:["20K","50K","100K","100M"],lat:46.54,lon:12.14,notes:"Dolomites"},
+  {name:"Val d'Aran by UTMB",country:"Spain",city:"Pyrenees",dates:"Jul 1-5",continent:"Europe",type:"Major",dists:["20K","50K","100K","100M"],lat:42.70,lon:0.72,notes:"EUROPE MAJOR \u2014 double stones!"},
+  {name:"Nice Cote d'Azur",country:"France",city:"Nice",dates:"Jul 9-11",continent:"Europe",type:"Event",dists:["20K","50K","100K"],lat:43.71,lon:7.26,notes:"French Riviera"},
+  {name:"Bucovina Ultra Rocks",country:"Romania",city:"Bucovina",dates:"Jul 10-12",continent:"Europe",type:"Event",dists:["20K","50K"],lat:47.75,lon:25.35,notes:"Carpathian Mountains"},
+  {name:"Zugspitz Ultra Trail",country:"Germany",city:"Garmisch",dates:"Jul 15-19",continent:"Europe",type:"Event",dists:["20K","50K","100K"],lat:47.50,lon:11.10,notes:"Germany's highest peak"},
+  {name:"Monte Rosa Walser Waeg",country:"Italy",city:"Monte Rosa",dates:"Jul 17-19",continent:"Europe",type:"Event",dists:["20K","50K","100K"],lat:45.88,lon:7.87,notes:"Italian Alps"},
+  {name:"Trail du Saint-Jacques",country:"France",city:"Le Puy-en-Velay",dates:"Jul 24-26",continent:"Europe",type:"Event",dists:["20K","50K","100K"],lat:45.04,lon:3.88,notes:"Camino region"},
+  {name:"Penyagolosa Trails",country:"Spain",city:"Castellon",dates:"Aug 1-2",continent:"Europe",type:"Event",dists:["20K","50K","100K"],lat:40.23,lon:-0.35,notes:"Eastern Spain"},
+  {name:"Ultra-Trail Cape Town",country:"South Africa",city:"Cape Town",dates:"Aug 6-8",continent:"Africa",type:"Event",dists:["20K","50K","100K","100M"],lat:-33.96,lon:18.47,notes:"Table Mountain"},
+  {name:"Kackar",country:"Turkey",city:"Kackar Mtns",dates:"Sep 10-13",continent:"Europe",type:"Event",dists:["20K","50K","100K"],lat:40.80,lon:41.10,notes:"Eastern Turkey"},
+  {name:"Ultra Pirineu",country:"Spain",city:"Catalonia",dates:"Sep 11-13",continent:"Europe",type:"Event",dists:["20K","50K","100K","100M"],lat:42.25,lon:1.86,notes:"Pyrenees"},
+  {name:"Ultra-Trail Mogan",country:"Spain",city:"Gran Canaria",dates:"Sep 18-20",continent:"Europe",type:"Event",dists:["20K","50K"],lat:27.93,lon:-15.43,notes:"Canary Islands"},
+  {name:"Cappadocia Ultra-Trail",country:"Turkey",city:"Cappadocia",dates:"Sep 24-27",continent:"Europe",type:"Event",dists:["20K","50K","100K","100M"],lat:38.64,lon:34.83,notes:"Fairy chimneys"},
+  {name:"Puglia",country:"Italy",city:"Puglia",dates:"Oct 30-31",continent:"Europe",type:"Event",dists:["20K","50K"],lat:40.64,lon:17.94,notes:"Southern Italian coast"},
+  {name:"Oman by UTMB",country:"Oman",city:"Hajar Mountains",dates:"Oct 30-Nov 1",continent:"Asia",type:"Event",dists:["20K","50K","100K"],lat:23.10,lon:57.30,notes:"Desert mountains"},
+
+  // ASIA
+  {name:"Ultra-Trail Xiamen",country:"China",city:"Xiamen",dates:"Mar 6-8",continent:"Asia",type:"Event",dists:["20K","50K"],lat:24.48,lon:118.09,notes:"Coastal China"},
+  {name:"TransLantau",country:"Hong Kong",city:"Lantau Island",dates:"Mar 14-15",continent:"Asia",type:"Event",dists:["20K","50K","100K"],lat:22.27,lon:113.94,notes:"Hong Kong"},
+  {name:"Mount Sun",country:"China",city:"Emeishan",dates:"Apr 10-12",continent:"Asia",type:"Event",dists:["20K","50K","100K"],lat:29.52,lon:103.33,notes:"Sacred mountain"},
+  {name:"Chiang Mai Thailand",country:"Thailand",city:"Chiang Mai",dates:"Apr 30-May 3",continent:"Asia",type:"Major",dists:["20K","50K","100K","100M"],lat:18.79,lon:98.98,notes:"ASIA-PACIFIC MAJOR \u2014 double stones!"},
+  {name:"Ultra-Trail Great Wall",country:"China",city:"Beijing",dates:"May 15-17",continent:"Asia",type:"Event",dists:["20K","50K"],lat:40.43,lon:116.57,notes:"Great Wall of China"},
+  {name:"Kaga Spa Trail Endurance",country:"Japan",city:"Kaga, Ishikawa",dates:"Jun 12-14",continent:"Asia",type:"Event",dists:["20K","50K","100K","100M"],lat:36.30,lon:136.31,notes:"Hot spring region"},
+  {name:"Ultra-Trail Tai Mo Shan",country:"Hong Kong",city:"New Territories",dates:"Jun 18-21",continent:"Asia",type:"Event",dists:["20K","50K","100K"],lat:22.41,lon:114.12,notes:"HK highest peak"},
+  {name:"TransJeju",country:"South Korea",city:"Jeju Island",dates:"Sep 11-13",continent:"Asia",type:"Event",dists:["20K","50K","100K"],lat:33.36,lon:126.53,notes:"UNESCO volcanic island"},
+  {name:"Trail of The Kings",country:"Indonesia",city:"Indonesia",dates:"Sep 11-13",continent:"Asia",type:"Event",dists:["20K","50K"],lat:-6.75,lon:106.75,notes:"Tropical mountains"},
+  {name:"Malaysia Ultra Trail",country:"Malaysia",city:"Malaysia",dates:"Oct 2-4",continent:"Asia",type:"Event",dists:["20K","50K","100K"],lat:4.21,lon:101.97,notes:"Rainforest trails"},
+  {name:"Amazean Jungle",country:"Thailand",city:"Chiang Rai",dates:"Oct 16-18",continent:"Asia",type:"Event",dists:["20K","50K","100K"],lat:19.91,lon:99.83,notes:"Northern Thailand"},
+  {name:"Xtrail Kenting",country:"Taiwan",city:"Kenting",dates:"Nov 6-8",continent:"Asia",type:"Event",dists:["20K","50K"],lat:21.95,lon:120.80,notes:"Tropical south"},
+  {name:"Ultra-Trail Shudao",country:"China",city:"Sichuan",dates:"Dec 10-12",continent:"Asia",type:"Event",dists:["20K","50K","100K"],lat:30.57,lon:104.07,notes:"Sichuan province"},
+
+  // OCEANIA
+  {name:"Ultra-Trail Australia",country:"Australia",city:"Blue Mountains, NSW",dates:"May 14-17",continent:"Oceania",type:"Major",dists:["20K","50K","100K","100M"],lat:-33.72,lon:150.31,notes:"OCEANIA MAJOR \u2014 double stones!"},
+  {name:"Ultra-Trail Kosciuszko",country:"Australia",city:"Jindabyne, NSW",dates:"Nov 26-28",continent:"Oceania",type:"Event",dists:["20K","50K","100K","100M"],lat:-36.42,lon:148.62,notes:"Snowy Mountains"},
+  {name:"Tarawera Ultra-Trail",country:"New Zealand",city:"Rotorua",dates:"Feb 13-14 (2027)",continent:"Oceania",type:"Event",dists:["20K","50K","100K","100M"],lat:-38.14,lon:176.25,notes:"Volcanic geothermal"},
+
+  // AFRICA
+  {name:"Ultra-Trail Drakensberg",country:"South Africa",city:"KwaZulu-Natal",dates:"May 29-31",continent:"Africa",type:"Event",dists:["20K","50K","100K"],lat:-29.37,lon:29.28,notes:"Drakensberg Mountains"},
+];
+
+// Logan, UT
+const LOGAN = { lat: 41.735, lon: -111.834 };
+
+function haversine(lat1, lon1, lat2, lon2) {
+  const R = 3959;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+  return Math.round(R * 2 * Math.asin(Math.sqrt(a)));
+}
+
+function bestCCCCategory(dists) {
+  for (const pref of ["100K","50K","100M"]) { if (dists.includes(pref)) return pref; }
+  if (dists.includes("20K")) return "20K";
+  return null;
+}
+
+function stonesFor(cat, isMajor) {
+  const base = {"20K":1,"50K":2,"100K":3,"100M":4};
+  const s = base[cat] || 0;
+  return isMajor ? s*2 : s;
+}
+
+function providesCCCIndex(dists) {
+  return dists.some(d => ["50K","100K","100M"].includes(d));
+}
+
+function isLocal(dist) { return dist < 150; }
+
+// Lottery calculation
+const CCC_APPLICANTS = 7000;
+const CCC_SLOTS = 1200;
+const AVG_STONES = 5.0;
+
+function calcProb(stones) {
+  if (stones <= 0) return 0;
+  const pool = CCC_APPLICANTS * AVG_STONES;
+  const share = stones / pool;
+  return 1 - Math.pow(1 - share, CCC_SLOTS);
+}
+
+// State
+const selected = new Set();
+let activeFilter = "All";
+
+// Enrich race data
+races.forEach((r, i) => {
+  r.id = i;
+  r.dist = haversine(LOGAN.lat, LOGAN.lon, r.lat, r.lon);
+  r.bestCat = bestCCCCategory(r.dists);
+  r.stones = stonesFor(r.bestCat, r.type === "Major");
+  r.hasIndex = providesCCCIndex(r.dists);
+  r.isLocal = isLocal(r.dist);
+  r.isMajor = r.type === "Major";
+});
+
+// Build filters
+const continents = ["All", ...new Set(races.map(r => r.continent))];
+const filterDiv = document.getElementById("filters");
+continents.forEach(c => {
+  const btn = document.createElement("button");
+  btn.className = "filter-btn" + (c === "All" ? " active" : "");
+  btn.textContent = c;
+  btn.onclick = () => {
+    activeFilter = c;
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    renderTable();
+  };
+  filterDiv.appendChild(btn);
+});
+
+// Render
+function renderTable() {
+  const tbody = document.getElementById("raceBody");
+  const filtered = activeFilter === "All" ? races : races.filter(r => r.continent === activeFilter);
+  document.getElementById("raceCount").textContent = filtered.length + " events" + (activeFilter !== "All" ? " in " + activeFilter : " worldwide");
+
+  tbody.innerHTML = filtered.map(r => {
+    const isSel = selected.has(r.id);
+    const cls = [isSel ? "selected" : "", r.isMajor ? "major" : ""].filter(Boolean).join(" ");
+    const badges = [];
+    if (r.isMajor) badges.push('<span class="major-badge">Major</span>');
+    if (r.isLocal) badges.push('<span class="local-badge">Near Logan</span>');
+
+    return `<tr class="${cls}" data-id="${r.id}">
+      <td><span class="race-name">${r.name}${badges.join("")}</span><br><span class="race-meta">${r.notes}</span></td>
+      <td>${r.dates}</td>
+      <td>${r.city}, ${r.country}</td>
+      <td>${r.bestCat || "N/A"}</td>
+      <td><span class="stones-pill ${r.isMajor ? "major-stones" : ""}">${r.stones}</span></td>
+      <td>${r.hasIndex ? '<span class="index-yes">Yes</span>' : '<span class="index-no">20K only</span>'}</td>
+      <td>${r.dist.toLocaleString()}</td>
+      <td><div class="check-col"><div class="race-check ${isSel ? "checked" : ""}" data-id="${r.id}"></div></div></td>
+    </tr>`;
+  }).join("");
+
+  // Attach click handlers
+  tbody.querySelectorAll("tr").forEach(tr => {
+    tr.onclick = (e) => {
+      const id = parseInt(tr.dataset.id);
+      toggleRace(id);
+    };
+  });
+}
+
+function toggleRace(id) {
+  if (selected.has(id)) selected.delete(id);
+  else selected.add(id);
+  renderTable();
+  updateStats();
+}
+
+function updateStats() {
+  let totalStones = 0;
+  let hasIndex = false;
+  selected.forEach(id => {
+    const r = races[id];
+    totalStones += r.stones;
+    if (r.hasIndex) hasIndex = true;
+  });
+
+  const prob = calcProb(totalStones);
+  const probPct = (prob * 100).toFixed(1);
+
+  // Stats bar
+  document.getElementById("statStones").textContent = totalStones;
+  document.getElementById("statRaces").textContent = selected.size;
+  document.getElementById("statOdds").textContent = totalStones > 0 ? probPct + "%" : "\u2014";
+  document.getElementById("statIndex").textContent = hasIndex ? "Yes" : "No";
+  document.getElementById("statIndex").style.color = hasIndex ? "#5ddb82" : "#ff6b6b";
+
+  // Odds panel
+  document.getElementById("oddsStones").textContent = totalStones;
+  const stonePct = Math.min(100, (totalStones / 10) * 100);
+  document.getElementById("stoneMeter").style.width = stonePct + "%";
+  document.getElementById("stoneMeter").style.background = totalStones >= 6 ? "var(--green)" : totalStones >= 4 ? "var(--gold)" : "var(--red)";
+
+  document.getElementById("oddsProb").textContent = totalStones > 0 ? probPct + "%" : "\u2014";
+  document.getElementById("probMeter").style.width = (prob * 100) + "%";
+  const probColor = prob >= 0.3 ? "var(--green)" : prob >= 0.15 ? "var(--gold)" : "var(--red)";
+  document.getElementById("probMeter").style.background = probColor;
+
+  if (totalStones > 0) {
+    const oneIn = (1/prob).toFixed(1);
+    document.getElementById("oddsOne").textContent = "~1 in " + oneIn + " chance";
+  } else {
+    document.getElementById("oddsOne").textContent = "\u00a0";
+  }
+
+  // Assessment
+  let assess, advice, assessColor;
+  if (totalStones === 0) { assess = "Need Stones"; advice = "Select races to start collecting"; assessColor = "var(--gray-500)"; }
+  else if (totalStones <= 3) { assess = "Below Avg"; advice = "Below the average applicant. Add more races."; assessColor = "var(--red)"; }
+  else if (totalStones <= 5) { assess = "Average"; advice = "Near average odds. Consider a Major for a boost."; assessColor = "var(--gold)"; }
+  else if (totalStones <= 8) { assess = "Competitive"; advice = "Good position! Solid shot at selection."; assessColor = "var(--green)"; }
+  else { assess = "Excellent"; advice = "Well above average. Strong lottery position."; assessColor = "var(--green)"; }
+  document.getElementById("oddsAssess").textContent = assess;
+  document.getElementById("oddsAssess").style.color = assessColor;
+  document.getElementById("oddsAdvice").textContent = advice;
+
+  // Scenario table
+  renderScenarios(totalStones);
+}
+
+function renderScenarios(currentStones) {
+  const scenarios = [
+    [2, "Low", "1 Event 50K"],
+    [3, "Below average", "1 Event 100K"],
+    [4, "Average applicant", "1 Major 50K or 2 Event 50Ks"],
+    [5, "Slightly above avg", "1 Event 50K + 1 Event 100K"],
+    [6, "Competitive", "1 Major 100K"],
+    [7, "Good odds", "1 Major 100K + 1 Event 20K"],
+    [8, "Strong position", "1 Major 100K + 1 Event 50K"],
+    [10, "Very strong", "1 Major 100K + 1 Major 50K"],
+    [12, "Excellent", "1 Major 100M + 1 Major 50K"],
+  ];
+
+  const tbody = document.querySelector("#scenarioTable tbody");
+  tbody.innerHTML = scenarios.map(([stones, assess, how]) => {
+    const p = calcProb(stones);
+    const isCurrent = stones === currentStones;
+    const isHighlight = stones >= 6 && stones <= 8 && !isCurrent;
+    const cls = isCurrent ? "current" : isHighlight ? "highlight" : "";
+    return `<tr class="${cls}">
+      <td><strong>${stones}</strong>${isCurrent ? " \u2190 You" : ""}</td>
+      <td>${(p*100).toFixed(1)}%</td>
+      <td>~1 in ${(1/p).toFixed(1)}</td>
+      <td>${assess}</td>
+      <td style="text-align:left">${how}</td>
+    </tr>`;
+  }).join("");
+}
+
+// Strategies
+function renderStrategies() {
+  const strats = [
+    {
+      name: "A: Budget-Friendly Local",
+      color: "var(--gold)",
+      races: [
+        { name: "Speedgoat 50K", loc: "Snowbird, UT", stones: 2, note: "~45 min drive" },
+        { name: "Snowbasin 50K", loc: "Ogden, UT", stones: 2, note: "~1 hr drive" },
+      ],
+      total: 4, summary: "4 stones. Average odds. Near-zero travel cost. Valid 50K Index."
+    },
+    {
+      name: "B: Competitive Value",
+      color: "var(--blue)",
+      races: [
+        { name: "Canyons 100K", loc: "Auburn, CA", stones: 3, note: "9 hr drive / fly" },
+        { name: "Speedgoat 50K", loc: "Snowbird, UT", stones: 2, note: "~45 min drive" },
+        { name: "Snowbasin 50K", loc: "Ogden, UT", stones: 2, note: "~1 hr drive" },
+      ],
+      total: 7, summary: "7 stones. ~25-30% odds. Locks in 100K Index. Two races basically local."
+    },
+    {
+      name: "C: Maximize Stones",
+      color: "var(--orange)",
+      races: [
+        { name: "Canyons 100K", loc: "Auburn, CA", stones: 3, note: "9 hr drive / fly" },
+        { name: "Speedgoat 50K", loc: "Snowbird, UT", stones: 2, note: "~45 min drive" },
+        { name: "Kodiak 100K (MAJOR)", loc: "Big Bear, CA", stones: 6, note: "Fly SLC-ONT" },
+      ],
+      total: 11, summary: "11 stones. ~40% odds. Kodiak = Americas Major with double stones."
+    },
+    {
+      name: "D: All-In Utah + Major",
+      color: "var(--green)",
+      races: [
+        { name: "Speedgoat 50K", loc: "Snowbird, UT", stones: 2, note: "~45 min drive" },
+        { name: "Snowbasin 50K", loc: "Ogden, UT", stones: 2, note: "~1 hr drive" },
+        { name: "Kodiak 100K (MAJOR)", loc: "Big Bear, CA", stones: 6, note: "Fly SLC-ONT" },
+      ],
+      total: 10, summary: "10 stones. ~37% odds. Only 1 trip out of state."
+    },
+  ];
+
+  const grid = document.getElementById("strategyGrid");
+  grid.innerHTML = strats.map(s => `
+    <div class="strategy-card">
+      <div class="strategy-card-head" style="background:${s.color}">Strategy ${s.name}</div>
+      <div class="strategy-card-body">
+        ${s.races.map(r => `<div class="strategy-race">
+          <span class="sr-name">${r.name}<br><span class="race-meta">${r.loc} &middot; ${r.note}</span></span>
+          <span class="sr-stones"><span class="stones-pill${r.stones >= 6 ? ' major-stones' : ''}">${r.stones}</span></span>
+        </div>`).join("")}
+        <div class="strategy-summary">${s.total} stones total &mdash; ${s.summary}</div>
+      </div>
+    </div>
+  `).join("");
+}
+
+// Init
+renderTable();
+updateStats();
+renderStrategies();
+</script>
+</body>
+</html>
